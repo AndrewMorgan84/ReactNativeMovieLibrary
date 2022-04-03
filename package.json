@@ -10,8 +10,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "axios": "^0.21.4",
     "react": "17.0.2",
-    "react-native": "0.68.0"
+    "react-native": "0.68.0",
+    "react-native-image-slider-box": "^1.1.21"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
