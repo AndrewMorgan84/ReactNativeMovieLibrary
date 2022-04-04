@@ -1,8 +1,8 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
-import {Text, View, StyleSheet, Dimensions, FlatList} from 'react-native';
+import {Text, View, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {SliderBox} from 'react-native-image-slider-box';
 import {useEffect, useState} from 'react/cjs/react.development';
+import List from '../components/List';
 import {getPopularMovies, getUpcomingMovies} from '../services/services';
 
 const dimensions = Dimensions.get('screen');
@@ -37,23 +37,22 @@ const Home = () => {
   }, []);
   return (
     <React.Fragment>
-      <View style={styles.sliderContainer}>
-        <SliderBox
-          images={moviesImages}
-          dotStyle={styles.sliderStyle}
-          autoplay={true}
-          circleLoop={true}
-          sliderBoxHeight={dimensions.height / 1.5}
-        />
-        {error && <Text>Error loading data from server</Text>}
-      </View>
-      <View style={styles.carousel}>
-        <FlatList
-          data={popularMovies}
-          horizontal={true}
-          renderItem={({item}) => <Text>{item.title}</Text>}
-        />
-      </View>
+      <ScrollView>
+        <View style={styles.sliderContainer}>
+          <SliderBox
+            images={moviesImages}
+            dotStyle={styles.sliderStyle}
+            autoplay={true}
+            circleLoop={true}
+            sliderBoxHeight={dimensions.height / 1.75}
+            resizeMode={'stretch'}
+          />
+          {error && <Text>Error loading data from server</Text>}
+        </View>
+        <View style={styles.carousel}>
+          <List title={'Popular Movies'} content={popularMovies} />
+        </View>
+      </ScrollView>
     </React.Fragment>
   );
 };
