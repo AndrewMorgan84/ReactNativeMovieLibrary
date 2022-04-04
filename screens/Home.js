@@ -8,54 +8,52 @@ import {
   getUpcomingMovies,
   getPopularTvShows,
   getFamilyMovies,
+  getDocumentaryMovies,
 } from '../services/services';
 
 const dimensions = Dimensions.get('screen');
 
 const Home = () => {
-  const [moviesImages, setMoviesImages] = useState([]);
-  const [popularMovies, setPopularMovies] = useState([]);
-  const [upcomingMovies, setUpcomingMovies] = useState([]);
-  const [popularTvShows, setPopularTvShows] = useState([]);
-  const [familyMovies, setFamilyMovies] = useState([]);
+  const [moviesImages, setMoviesImages] = useState();
+  const [popularMovies, setPopularMovies] = useState();
+  const [popularTvShows, setPopularTvShows] = useState();
+  const [familyMovies, setFamilyMovies] = useState();
+  const [docuMovies, setDocuMovies] = useState();
   const [error, setError] = useState(false);
 
+  const getData = () => {
+    return Promise.all([
+      getUpcomingMovies(),
+      getPopularMovies(),
+      getPopularTvShows(),
+      getFamilyMovies(),
+      getDocumentaryMovies(),
+    ]);
+  };
+
   useEffect(() => {
-    getPopularMovies()
-      .then(movies => {
-        setPopularMovies(movies);
-      })
-      .catch(err => {
-        setError(err);
-      });
-
-    getUpcomingMovies()
-      .then(movies => {
-        const moviesImagesArray = [];
-        movies.forEach(movie => {
-          moviesImagesArray.push(
-            'https://image.tmdb.org/t/p/w500' + movie.poster_path,
-          );
-        });
-        setMoviesImages(moviesImagesArray);
-        setUpcomingMovies(movies);
-      })
-      .catch(err => {
-        setError(err);
-      });
-
-    getPopularTvShows()
-      .then(shows => {
-        setPopularTvShows(shows);
-      })
-      .catch(err => {
-        setError(err);
-      });
-
-    getFamilyMovies()
-      .then(movies => {
-        setFamilyMovies(movies);
-      })
+    getData()
+      .then(
+        ([
+          upcomingMoviesData,
+          popularMoviesData,
+          popularTvShowsData,
+          familyMoviesData,
+          docuMoviesData,
+        ]) => {
+          const moviesImagesArray = [];
+          upcomingMoviesData.forEach(movie => {
+            moviesImagesArray.push(
+              'https://image.tmdb.org/t/p/w500' + movie.poster_path,
+            );
+          });
+          setMoviesImages(moviesImagesArray);
+          setPopularMovies(popularMoviesData);
+          setPopularTvShows(popularTvShowsData);
+          setFamilyMovies(familyMoviesData);
+          setDocuMovies(docuMoviesData);
+        },
+      )
       .catch(err => {
         setError(err);
       });
@@ -63,29 +61,48 @@ const Home = () => {
   return (
     <React.Fragment>
       <ScrollView>
-        <View style={styles.sliderContainer}>
-          <SliderBox
-            images={moviesImages}
-            dotStyle={styles.sliderStyle}
-            autoplay={true}
-            circleLoop={true}
-            sliderBoxHeight={dimensions.height / 1.75}
-            resizeMode={'stretch'}
-          />
-          {error && <Text>Error loading data from server</Text>}
-        </View>
-        <View style={styles.carousel}>
-          <List title={'Popular Movies'} content={popularMovies} />
-        </View>
-        <View style={styles.carousel}>
-          <List title={'Upcoming Movies'} content={upcomingMovies} />
-        </View>
-        <View style={styles.carousel}>
-          <List title={'Popular TV Shows'} content={popularTvShows} />
-        </View>
-        <View style={styles.carousel}>
-          <List title={'Family Movies'} content={familyMovies} />
-        </View>
+        {/* upcoming movie images */}
+        {moviesImages && (
+          <View style={styles.sliderContainer}>
+            <SliderBox
+              images={moviesImages}
+              dotStyle={styles.sliderStyle}
+              autoplay={true}
+              circleLoop={true}
+              sliderBoxHeight={dimensions.height / 1.75}
+              resizeMode={'stretch'}
+            />
+            {error && <Text>Error loading data from server</Text>}
+          </View>
+        )}
+
+        {/* popular movies */}
+        {popularMovies && (
+          <View style={styles.carousel}>
+            <List title={'Popular Movies'} content={popularMovies} />
+          </View>
+        )}
+
+        {/* popular tv shows */}
+        {popularTvShows && (
+          <View style={styles.carousel}>
+            <List title={'Popular TV Shows'} content={popularTvShows} />
+          </View>
+        )}
+
+        {/* family movies */}
+        {familyMovies && (
+          <View style={styles.carousel}>
+            <List title={'Family Movies'} content={familyMovies} />
+          </View>
+        )}
+
+        {/* documentary movies */}
+        {docuMovies && (
+          <View style={styles.carousel}>
+            <List title={'Documentary Movies'} content={docuMovies} />
+          </View>
+        )}
       </ScrollView>
     </React.Fragment>
   );
