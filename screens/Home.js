@@ -3,13 +3,21 @@ import {Text, View, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {SliderBox} from 'react-native-image-slider-box';
 import {useEffect, useState} from 'react/cjs/react.development';
 import List from '../components/List';
-import {getPopularMovies, getUpcomingMovies} from '../services/services';
+import {
+  getPopularMovies,
+  getUpcomingMovies,
+  getPopularTvShows,
+  getFamilyMovies,
+} from '../services/services';
 
 const dimensions = Dimensions.get('screen');
 
 const Home = () => {
   const [moviesImages, setMoviesImages] = useState([]);
   const [popularMovies, setPopularMovies] = useState([]);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
+  const [popularTvShows, setPopularTvShows] = useState([]);
+  const [familyMovies, setFamilyMovies] = useState([]);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -22,14 +30,31 @@ const Home = () => {
       });
 
     getUpcomingMovies()
-      .then(upcomingMovies => {
+      .then(movies => {
         const moviesImagesArray = [];
-        upcomingMovies.forEach(movie => {
+        movies.forEach(movie => {
           moviesImagesArray.push(
             'https://image.tmdb.org/t/p/w500' + movie.poster_path,
           );
         });
         setMoviesImages(moviesImagesArray);
+        setUpcomingMovies(movies);
+      })
+      .catch(err => {
+        setError(err);
+      });
+
+    getPopularTvShows()
+      .then(shows => {
+        setPopularTvShows(shows);
+      })
+      .catch(err => {
+        setError(err);
+      });
+
+    getFamilyMovies()
+      .then(movies => {
+        setFamilyMovies(movies);
       })
       .catch(err => {
         setError(err);
@@ -51,6 +76,15 @@ const Home = () => {
         </View>
         <View style={styles.carousel}>
           <List title={'Popular Movies'} content={popularMovies} />
+        </View>
+        <View style={styles.carousel}>
+          <List title={'Upcoming Movies'} content={upcomingMovies} />
+        </View>
+        <View style={styles.carousel}>
+          <List title={'Popular TV Shows'} content={popularTvShows} />
+        </View>
+        <View style={styles.carousel}>
+          <List title={'Family Movies'} content={familyMovies} />
         </View>
       </ScrollView>
     </React.Fragment>
