@@ -96,6 +96,10 @@ const Detail = ({route, navigation}) => {
                 <Text>{'Close'}</Text>
               </Pressable> */}
               <VideoPlayer
+                onBack={() => {
+                  videoShown();
+                }}
+                navigator={navigation}
                 source={{uri: 'https://vjs.zencdn.net/v/oceans.mp4'}}
               />
             </View>
