@@ -8,13 +8,13 @@ import {
   Text,
   View,
   Modal,
-  Pressable,
 } from 'react-native';
 import StarRating from 'react-native-star-rating';
 import Error from '../components/Error';
 import PlayButton from '../components/PlayButton';
 import {getMovie} from '../services/services';
 import dateFormat from 'dateformat';
+import VideoPlayer from 'react-native-video-controls';
 
 const placeholderImage = require('../assets/images/placeholder.png');
 const height = Dimensions.get('screen').height;
@@ -92,9 +92,12 @@ const Detail = ({route, navigation}) => {
           </ScrollView>
           <Modal animationType="slide" visible={modalVisible}>
             <View style={styles.videoModal}>
-              <Pressable onPress={() => videoShown()}>
+              {/* <Pressable onPress={() => videoShown()}>
                 <Text>{'Close'}</Text>
-              </Pressable>
+              </Pressable> */}
+              <VideoPlayer
+                source={{uri: 'https://vjs.zencdn.net/v/oceans.mp4'}}
+              />
             </View>
           </Modal>
         </View>
