@@ -38,7 +38,7 @@ export const getMovie = async id => {
   return resp.data;
 };
 
-export const getMovieVideos = async id => {
-  const resp = await axios.get(`${apiURL}/movie/${id}/videos?${apiKey}`);
-  return resp.data.results;
-};
+// export const getMovieVideos = async id => {
+//   const resp = await axios.get(`${apiURL}/movie/${id}/videos?${apiKey}`);
+//   return resp.data.results;
+// };
