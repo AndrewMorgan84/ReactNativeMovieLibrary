@@ -82,7 +82,7 @@ const Home = ({navigation}) => {
                 dotStyle={styles.sliderStyle}
                 autoplay={true}
                 circleLoop={true}
-                sliderBoxHeight={dimensions.height / 1.5}
+                sliderBoxHeight={dimensions.height / 1.68}
                 resizeMode={'stretch'}
               />
               {error && <Text>Error loading data from server</Text>}
