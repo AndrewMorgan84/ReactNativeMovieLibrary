@@ -1,13 +1,32 @@
 import React, {useState} from 'react';
-import {SafeAreaView, View, TextInput, StyleSheet} from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  Text,
+} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {searchMovieTv} from '../services/services';
+import Card from '../components/Card';
+import Error from '../components/Error';
 
 const Search = ({navigation}) => {
   const [text, onChangeText] = useState();
+  const [searchResults, setSearchResults] = useState();
+  const [error, setError] = useState(false);
 
   const onSubmit = query => {
-    console.log(query);
+    Promise.all([searchMovieTv(query, 'movie'), searchMovieTv(query, 'tv')])
+      .then(([movies, tv]) => {
+        const data = [...movies, ...tv];
+        setSearchResults(data);
+      })
+      .catch(() => {
+        setError(true);
+      });
   };
 
   return (
@@ -17,8 +36,8 @@ const Search = ({navigation}) => {
           <View style={styles.form}>
             <TextInput
               style={styles.input}
-              placeholder={'Search Movie or TV Show'}
-              placeholderTextColor={'#fff'}
+              placeholder={'Search Movie'}
+              placeholderTextColor={'white'}
               onChangeText={onChangeText}
               value={text}
             />
@@ -29,6 +48,37 @@ const Search = ({navigation}) => {
               <Icon name={'search-outline'} size={30} color={'#fff'} />
             </TouchableOpacity>
           </View>
+        </View>
+        <View style={styles.searchItems}>
+          {/* Searched items results */}
+          {searchResults && searchResults.length > 0 && (
+            <FlatList
+              numColumns={3}
+              data={searchResults}
+              renderItem={({item}) => (
+                <Card navigation={navigation} item={item} />
+              )}
+              keyExtractor={item => item.id}
+            />
+          )}
+
+          {/* When searched but no results */}
+          {searchResults && searchResults.length == 0 && (
+            <View style={styles.noResults}>
+              <Text>No results matching your criteria.</Text>
+              <Text>Try different keywords.</Text>
+            </View>
+          )}
+
+          {/* When nothing is searched */}
+          {!searchResults && (
+            <View style={styles.empty}>
+              <Text>Type something to start searching</Text>
+            </View>
+          )}
+
+          {/* Error */}
+          {error && <Error />}
         </View>
       </SafeAreaView>
     </View>
@@ -47,6 +97,7 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 8,
     width: 325,
+    color: 'white',
   },
   container: {
     padding: 10,
