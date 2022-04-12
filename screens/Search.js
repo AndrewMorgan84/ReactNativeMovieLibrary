@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
   SafeAreaView,
@@ -12,6 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {searchMovieTv} from '../services/services';
 import Card from '../components/Card';
 import Error from '../components/Error';
+import {color} from 'react-native-reanimated';
 
 const Search = ({navigation}) => {
   const [text, onChangeText] = useState();
@@ -65,7 +67,9 @@ const Search = ({navigation}) => {
           {/* When searched but no results */}
           {searchResults && searchResults.length == 0 && (
             <View style={styles.noResults}>
-              <Text>No results matching your criteria.</Text>
+              <Text style={{color: '#fff'}}>
+                No results matching your criteria.
+              </Text>
               <Text>Try different keywords.</Text>
             </View>
           )}
@@ -73,7 +77,9 @@ const Search = ({navigation}) => {
           {/* When nothing is searched */}
           {!searchResults && (
             <View style={styles.empty}>
-              <Text>Type something to start searching</Text>
+              <Text style={{color: '#fff'}}>
+                Type something to start searching
+              </Text>
             </View>
           )}
 
@@ -89,6 +95,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: 'black',
+    color: '#fff',
   },
   input: {
     borderRadius: 15,
@@ -97,11 +104,12 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 8,
     width: 325,
-    color: 'white',
+    color: '#fff',
   },
   container: {
     padding: 10,
     paddingTop: 60,
+    color: '#fff',
   },
   form: {
     flexDirection: 'row',
@@ -110,6 +118,19 @@ const styles = StyleSheet.create({
     flexBasis: 'auto',
     flexGrow: 1,
     paddingRight: 8,
+    color: '#fff',
+  },
+  searchItems: {
+    padding: 5,
+    color: '#fff',
+  },
+
+  noResults: {
+    paddingTop: 20,
+    color: '#fff',
+  },
+  empty: {
+    color: '#fff',
   },
 });
 
